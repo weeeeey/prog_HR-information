@@ -35,24 +35,28 @@ export default function App($app) {
 
     const cardsContainer = new CardsContainer({
         $app: this.$target,
-        initialstate: this.state.personals,
+        initialstate: {
+            personals: this.state.personals,
+            cardStatus: this.state.cardStatus,
+        },
     });
     this.setState = (nextState) => {
         this.state = nextState;
-        console.log(this.state);
         contentTitle.setState(this.state.location);
-        cardsContainer.setState(this.state.personals);
+        cardsContainer.setState({
+            personals: this.state.personals,
+            cardStatus: this.state.cardStatus,
+        });
     };
     this.init = async () => {
         try {
             const [data, cardStatus] = await getData();
-            console.log(data);
-            console.log(cardStatus);
-            // this.setState({
-            //     ...this.state,
-            //     personals: data,
-            //     cardStatus,
-            // });
+
+            this.setState({
+                ...this.state,
+                personals: data,
+                cardStatus,
+            });
         } catch (error) {
             throw new Error(error);
         }
