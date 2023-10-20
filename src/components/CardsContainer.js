@@ -1,4 +1,4 @@
-export default function CardsContainer({ $app, initialstate }) {
+export default function CardsContainer({ $app, initialstate, onClick }) {
     this.state = initialstate;
     this.$target = document.createElement('div');
     this.$target.id = 'cards_container';
@@ -10,44 +10,37 @@ export default function CardsContainer({ $app, initialstate }) {
         this.render();
     };
     this.render = () => {
-        const { personals } = this.state;
-        const cardStatus = JSON.parse(
-            window.localStorage.getItem('cardStatus')
-        );
-        this.$target.innerHTML = `
-            ${personals
-                .map((info, idx) => {
-                    const classes = cardStatus[idx].status;
-                    return `
-            <div data-id=${idx} class=${classes}>
-                <div class="card_plane card_plane--front">${info.nickname}</div>
-                <div class="card_plane card_plane--back">${info.mbti}</div>
-            </div>       
-            `;
-                })
-                .join('')}
-        `;
+        const { personals, cardStatus } = this.state;
+
+        this.$target.innerHTML = ``;
+        personals.forEach((info, idx) => {
+            const cardDiv = document.createElement('div');
+            cardDiv.className = cardStatus[idx].status;
+            cardDiv.setAttribute('data-id', idx);
+            cardDiv.innerHTML = `
+                        <div class="card_plane card_plane--front">${info.nickname}</div>
+                        <div class="card_plane card_plane--back">${info.mbti}</div>
+                    `;
+            this.$target.appendChild(cardDiv);
+        });
     };
     this.$target.addEventListener('click', (e) => {
-        const cardDiv = e.target.closest('.card');
-        if (!cardDiv) return;
+        let cardDiv = e.target.closest('.card');
+        if (!cardDiv) {
+            cardDiv = e.target.closest('.card is-flipped');
+            if (!cardDiv) return;
+        }
 
-        const dataId = parseInt(cardDiv.getAttribute('data-id'));
+        const dataId = cardDiv.getAttribute('data-id');
         const { cardStatus } = this.state;
-        const newStatus = cardStatus.map((info) => {
-            if (info.idx === dataId) {
-                info.status =
-                    info.status === 'card' ? 'card is-flipped' : 'card';
-            }
-            return info;
-        });
-        console.log(newStatus);
+        const newStatus = {
+            ...cardStatus,
+        };
+        newStatus[dataId].status =
+            newStatus[dataId].status === 'card' ? 'card is-flipped' : 'card';
+
         window.localStorage.setItem('cardStatus', JSON.stringify(newStatus));
-        // if (cardDiv.classList.contains('is-flipped')) {
-        //     cardDiv.classList.remove('is-flipped');
-        // } else {
-        //     cardDiv.classList.add('is-flipped');
-        // }
+        onClick();
     });
     this.render();
 }

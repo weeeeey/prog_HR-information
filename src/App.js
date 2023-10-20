@@ -39,6 +39,15 @@ export default function App($app) {
             personals: this.state.personals,
             cardStatus: this.state.cardStatus,
         },
+        onClick: () => {
+            this.setState({
+                ...this.state,
+                cardStatus: JSON.parse(
+                    window.localStorage.getItem('cardStatus')
+                ),
+            });
+            console.log(this.state);
+        },
     });
     this.setState = (nextState) => {
         this.state = nextState;
