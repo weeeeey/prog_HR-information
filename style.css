@@ -43,17 +43,22 @@ header {
     width: 80%;
     margin: 10px auto;
     padding: 10px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 .card {
     margin: 20px 10px;
-    width: 100px;
-    height: 100px;
+    width: 200px;
+    height: 200px;
     border-radius: 25px;
     transform-style: preserve-3d;
     transform-origin: center right;
     transition: transform 1s;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
 }
 
 .card.is-flipped {
@@ -65,18 +70,20 @@ header {
     height: 100%;
     border-radius: 25px;
     text-align: center;
-    font-weight: 500;
-    font-size: 20px;
-    color: black;
+    font-weight: 700;
+    font-size: 40px;
+    color: white;
     backface-visibility: hidden;
 }
 
 .card_plane--front {
-    background: #f2f2f2;
+    background: #0d0d0d;
 }
 
 .card_plane--back {
-    transform: rotateY(180deg);
+    background: #f2f2f2;
+    color: #3098f2;
+    transform: rotateY(180deg) translateY(-200px);
 }
 
 /* 인사 정보 등록 페이지 */
