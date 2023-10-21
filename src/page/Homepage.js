@@ -26,7 +26,13 @@ export default function Homepage({ $app, location }) {
                     window.localStorage.getItem('cardStatus')
                 ),
             });
-            console.log(this.state);
+        },
+        infinityScroll: async () => {
+            const [data, cardStatus] = await getData();
+            this.setState({
+                ...this.state,
+                personals: [...this.state.personals, ...data],
+            });
         },
     });
     this.setState = (nextState) => {
