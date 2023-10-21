@@ -1,3 +1,5 @@
+import { setCardStatus } from '../util/localStorage.js';
+
 export default function CardsContainer({ $app, initialstate, onClick }) {
     this.state = initialstate;
     this.$target = document.createElement('div');
@@ -27,20 +29,29 @@ export default function CardsContainer({ $app, initialstate, onClick }) {
     this.$target.addEventListener('click', (e) => {
         let cardDiv = e.target.closest('.card');
         if (!cardDiv) {
-            cardDiv = e.target.closest('.card is-flipped');
-            if (!cardDiv) return;
+            return;
         }
 
         const dataId = cardDiv.getAttribute('data-id');
-        const { cardStatus } = this.state;
-        const newStatus = {
-            ...cardStatus,
-        };
-        newStatus[dataId].status =
-            newStatus[dataId].status === 'card' ? 'card is-flipped' : 'card';
-
-        window.localStorage.setItem('cardStatus', JSON.stringify(newStatus));
+        setCardStatus(dataId);
         onClick();
     });
     this.render();
+
+    window.addEventListener('load', () => {
+        const cards = document.querySelectorAll('.card');
+        const observer = new IntersectionObserver(
+            (item) => {
+                if (item[0].isIntersecting === true) {
+                    console.log(item[0]);
+                }
+            },
+            { threshold: 1 }
+        );
+        cards.forEach((card, idx) => {
+            if (idx === 9) {
+                observer.observe(card);
+            }
+        });
+    });
 }

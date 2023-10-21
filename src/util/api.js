@@ -1,3 +1,5 @@
+import { getCardStatus } from './localStorage.js';
+
 const NEW_END_POINT = './src/data/new_data.json';
 
 const req = async () => {
@@ -12,7 +14,7 @@ const req = async () => {
 export const getData = async () => {
     try {
         let data = JSON.parse(window.localStorage.getItem('personalInfo'));
-        let cardStatus = JSON.parse(window.localStorage.getItem('cardStatus'));
+        let cardStatus = getCardStatus();
         if (!data) {
             // const old_data = await req(OLD_END_POINT);
             data = await req();

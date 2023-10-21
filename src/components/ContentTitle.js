@@ -11,7 +11,7 @@ export default function ContentTitle({ $app, initialState }) {
     };
     this.render = () => {
         const text =
-            this.state === '/' ? 'Great PeoPle!' : 'Sign Up, GreatPeople!';
+            this.state === '/' ? 'Great People!' : 'Sign Up, GreatPeople!';
         this.$target.innerHTML = `
             <h1>${text}</h1>
         `;

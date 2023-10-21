@@ -1,13 +1,10 @@
-import CardsContainer from './components/CardsContainer.js';
-import ContentTitle from './components/ContentTitle.js';
 import Header from './components/Header.js';
-import { getData } from './util/api.js';
+import Homepage from './page/Homepage.js';
+import SignupPage from './page/SignupPage.js';
 
 export default function App($app) {
     this.state = {
         location: '/',
-        personals: [],
-        cardStatus: [],
     };
 
     new Header({
@@ -18,57 +15,36 @@ export default function App($app) {
             document.dispatchEvent(urlChange);
 
             this.setState({
-                ...this.state,
                 location: url,
             });
         },
     });
-
-    this.$target = document.createElement('main');
-    this.$target.id = 'page_content';
-    $app.appendChild(this.$target);
-
-    const contentTitle = new ContentTitle({
-        $app: this.$target,
-        initialState: this.state.location,
-    });
-
-    const cardsContainer = new CardsContainer({
-        $app: this.$target,
-        initialstate: {
-            personals: this.state.personals,
-            cardStatus: this.state.cardStatus,
-        },
-        onClick: () => {
-            this.setState({
-                ...this.state,
-                cardStatus: JSON.parse(
-                    window.localStorage.getItem('cardStatus')
-                ),
-            });
-            console.log(this.state);
-        },
-    });
     this.setState = (nextState) => {
         this.state = nextState;
-        contentTitle.setState(this.state.location);
-        cardsContainer.setState({
-            personals: this.state.personals,
-            cardStatus: this.state.cardStatus,
-        });
+        this.render();
     };
-    this.init = async () => {
-        try {
-            const [data, cardStatus] = await getData();
+    this.render = () => {
+        this.$target = document.createElement('main');
+        this.$target.id = 'page_content';
 
-            this.setState({
-                ...this.state,
-                personals: data,
-                cardStatus,
+        const $main = $app.querySelector('main');
+        if ($main) {
+            $app.removeChild($main);
+        }
+        $app.appendChild(this.$target);
+
+        if (this.state.location === '/') {
+            new Homepage({
+                $app: this.$target,
+                location: this.state.location,
             });
-        } catch (error) {
-            throw new Error(error);
+        }
+        if (this.state.location === '/signup') {
+            new SignupPage({
+                $app: this.$target,
+                location: this.state.location,
+            });
         }
     };
-    this.init();
+    this.render();
 }
